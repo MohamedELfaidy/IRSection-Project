@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IR System</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #2c3e50; }
+    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    input[type=text] { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
+    select, button { padding: 10px 16px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; }
+    button { background: #2980b9; color: white; border: none; cursor: pointer; }
+    button:hover { background: #1a6a9a; }
+    .result-card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin: 8px 0; background: #f9f9f9; }
+    .score { color: #27ae60; font-weight: bold; }
+    .metrics { background: #eaf4fb; border-radius: 6px; padding: 12px; margin-top: 16px; }
+    .metrics span { margin-right: 20px; font-weight: bold; }
+    #status { color: #888; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Information Retrieval System</h1>
+  <p>Corpus: <strong>{{ doc_count }} documents</strong></p>
+
+  <div class="controls">
+    <input type="text" id="query" placeholder="Enter your search query..." />
+    <select id="method">
+      <option value="tfidf">TF-IDF + Cosine</option>
+      <option value="td_matrix">Term-Document Matrix (Boolean)</option>
+      <option value="inverted_index">Inverted Index (Boolean)</option>
+    </select>
+    <button onclick="search()">Search</button>
+  </div>
+
+  <div>
+    <label>Relevant docs for evaluation (comma-separated, e.g. doc_1.txt,doc_2.txt):</label><br>
+    <input type="text" id="relevant" placeholder="optional" style="width:100%; margin-top:6px;" />
+  </div>
+
+  <p id="status"></p>
+  <div id="metrics"></div>
+  <div id="results"></div>
+
+  <script>
+    async function search() {
+      const query = document.getElementById('query').value.trim();
+      const method = document.getElementById('method').value;
+      const relevantRaw = document.getElementById('relevant').value.trim();
+      const relevant = relevantRaw ? relevantRaw.split(',').map(s => s.trim()) : [];
+
+      if (!query) { alert('Please enter a query.'); return; }
+
+      document.getElementById('status').textContent = 'Searching...';
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('metrics').innerHTML = '';
+
+      const res = await fetch('/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, method, relevant })
+      });
+      const data = await res.json();
+
+      document.getElementById('status').textContent =
+        `Found ${data.count} result(s) using [${method}]`;
+
+      // Show evaluation metrics if available
+      if (data.eval && Object.keys(data.eval).length > 0) {
+        const e = data.eval;
+        document.getElementById('metrics').innerHTML = `
+          <div class="metrics">
+            <strong>Evaluation:</strong>
+            <span>Precision: ${e.precision}</span>
+            <span>Recall: ${e.recall}</span>
+            <span>F1: ${e.f1}</span>
+            <span>AP: ${e.ap}</span>
+          </div>`;
+      }
+
+      // Show results
+      const container = document.getElementById('results');
+      if (data.results.length === 0) {
+        container.innerHTML = '<p>No documents matched your query.</p>';
+        return;
+      }
+      data.results.forEach((r, i) => {
+        container.innerHTML += `
+          <div class="result-card">
+            <strong>#${i+1} ${r.doc}</strong>
+            <span class="score"> Score: ${r.score}</span>
+            <br><small><a href="/document/${r.doc}" target="_blank">Preview</a></small>
+          </div>`;
+      });
+    }
+
+    document.getElementById('query').addEventListener('keydown', e => {
+      if (e.key === 'Enter') search();
+    });
+  </script>
+</body>
+</html>
