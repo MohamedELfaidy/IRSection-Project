@@ -703,7 +703,12 @@
     <div class="page-wrap">
       <!-- HEADER -->
       <header>
-        <div class="logo-mark">
+        <a
+          class="logo-mark"
+          href="/"
+          id="logo-link"
+          style="text-decoration: none; cursor: pointer"
+        >
           <svg
             viewBox="0 0 28 28"
             fill="none"
@@ -738,7 +743,7 @@
               stroke-linecap="round"
             />
           </svg>
-        </div>
+        </a>
         <div class="header-text">
           <div class="wordmark">Retri<em>vo</em></div>
           <div class="tagline">
@@ -1047,6 +1052,36 @@
       document.getElementById("query").addEventListener("keydown", (e) => {
         if (e.key === "Enter") doSearch();
       });
+      document
+        .getElementById("logo-link")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+
+          // Clear all inputs
+          document.getElementById("query").value = "";
+          document.getElementById("relevant").value = "";
+
+          // Clear results and metrics
+          document.getElementById("results-wrap").innerHTML = "";
+          document.getElementById("metrics-wrap").innerHTML = "";
+
+          // Hide status bar
+          const bar = document.getElementById("status-bar");
+          bar.classList.remove("visible");
+
+          // Reset method pills to TF-IDF
+          setMethod("tfidf", document.querySelector(".method-pill"));
+          document
+            .querySelectorAll(".method-pill")
+            .forEach((p) => p.classList.remove("active"));
+          document.querySelector(".method-pill").classList.add("active");
+
+          // Scroll to top smoothly
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          // Focus the search input
+          document.getElementById("query").focus();
+        });
     </script>
   </body>
 </html>
