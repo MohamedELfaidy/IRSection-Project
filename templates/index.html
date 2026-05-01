@@ -1,101 +1,1052 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>IR System</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; }
-    h1 { color: #2c3e50; }
-    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    input[type=text] { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
-    select, button { padding: 10px 16px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; }
-    button { background: #2980b9; color: white; border: none; cursor: pointer; }
-    button:hover { background: #1a6a9a; }
-    .result-card { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin: 8px 0; background: #f9f9f9; }
-    .score { color: #27ae60; font-weight: bold; }
-    .metrics { background: #eaf4fb; border-radius: 6px; padding: 12px; margin-top: 16px; }
-    .metrics span { margin-right: 20px; font-weight: bold; }
-    #status { color: #888; margin: 10px 0; }
-  </style>
-</head>
-<body>
-  <h1>🔍 Information Retrieval System</h1>
-  <p>Corpus: <strong>{{ doc_count }} documents</strong></p>
-
-  <div class="controls">
-    <input type="text" id="query" placeholder="Enter your search query..." />
-    <select id="method">
-      <option value="tfidf">TF-IDF + Cosine</option>
-      <option value="td_matrix">Term-Document Matrix (Boolean)</option>
-      <option value="inverted_index">Inverted Index (Boolean)</option>
-    </select>
-    <button onclick="search()">Search</button>
-  </div>
-
-  <div>
-    <label>Relevant docs for evaluation (comma-separated, e.g. doc_1.txt,doc_2.txt):</label><br>
-    <input type="text" id="relevant" placeholder="optional" style="width:100%; margin-top:6px;" />
-  </div>
-
-  <p id="status"></p>
-  <div id="metrics"></div>
-  <div id="results"></div>
-
-  <script>
-    async function search() {
-      const query = document.getElementById('query').value.trim();
-      const method = document.getElementById('method').value;
-      const relevantRaw = document.getElementById('relevant').value.trim();
-      const relevant = relevantRaw ? relevantRaw.split(',').map(s => s.trim()) : [];
-
-      if (!query) { alert('Please enter a query.'); return; }
-
-      document.getElementById('status').textContent = 'Searching...';
-      document.getElementById('results').innerHTML = '';
-      document.getElementById('metrics').innerHTML = '';
-
-      const res = await fetch('/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, method, relevant })
-      });
-      const data = await res.json();
-
-      document.getElementById('status').textContent =
-        `Found ${data.count} result(s) using [${method}]`;
-
-      // Show evaluation metrics if available
-      if (data.eval && Object.keys(data.eval).length > 0) {
-        const e = data.eval;
-        document.getElementById('metrics').innerHTML = `
-          <div class="metrics">
-            <strong>Evaluation:</strong>
-            <span>Precision: ${e.precision}</span>
-            <span>Recall: ${e.recall}</span>
-            <span>F1: ${e.f1}</span>
-            <span>AP: ${e.ap}</span>
-          </div>`;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Retrivo — Information Retrieval System</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
-      // Show results
-      const container = document.getElementById('results');
-      if (data.results.length === 0) {
-        container.innerHTML = '<p>No documents matched your query.</p>';
-        return;
+      :root {
+        --blue-50: #e6f1fb;
+        --blue-100: #b5d4f4;
+        --blue-200: #85b7eb;
+        --blue-400: #378add;
+        --blue-600: #185fa5;
+        --blue-800: #0c447c;
+        --blue-900: #042c53;
+        --gray-50: #f1efe8;
+        --gray-100: #d3d1c7;
+        --gray-200: #b4b2a9;
+        --gray-400: #888780;
+        --gray-600: #5f5e5a;
+        --gray-800: #444441;
+        --gray-900: #2c2c2a;
+        --teal-50: #e1f5ee;
+        --teal-400: #1d9e75;
+        --teal-600: #0f6e56;
+        --green-50: #eaf3de;
+        --green-600: #3b6d11;
+        --amber-50: #faeeda;
+        --amber-600: #854f0b;
+        --red-50: #fcebeb;
+        --red-600: #a32d2d;
       }
-      data.results.forEach((r, i) => {
-        container.innerHTML += `
-          <div class="result-card">
-            <strong>#${i+1} ${r.doc}</strong>
-            <span class="score"> Score: ${r.score}</span>
-            <br><small><a href="/document/${r.doc}" target="_blank">Preview</a></small>
-          </div>`;
-      });
-    }
 
-    document.getElementById('query').addEventListener('keydown', e => {
-      if (e.key === 'Enter') search();
-    });
-  </script>
-</body>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        background: #f8f7f3;
+        color: var(--gray-900);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── BACKGROUND TEXTURE ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(
+            circle at 15% 20%,
+            rgba(55, 138, 221, 0.06) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 85% 80%,
+            rgba(29, 158, 117, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 70%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ── HEADER ── */
+      header {
+        padding: 48px 0 40px;
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .logo-mark {
+        width: 52px;
+        height: 52px;
+        background: var(--blue-600);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 16px rgba(24, 95, 165, 0.25);
+      }
+
+      .logo-mark svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .header-text {
+        padding-top: 2px;
+      }
+
+      .wordmark {
+        font-family: "DM Serif Display", serif;
+        font-size: 32px;
+        color: var(--blue-800);
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+
+      .wordmark em {
+        font-style: italic;
+        color: var(--blue-400);
+      }
+
+      .tagline {
+        font-size: 13px;
+        color: var(--gray-400);
+        margin-top: 6px;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+      }
+
+      .corpus-badge {
+        margin-left: auto;
+        margin-top: 6px;
+        background: var(--blue-50);
+        color: var(--blue-800);
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--blue-100);
+        white-space: nowrap;
+        font-family: "DM Mono", monospace;
+      }
+
+      /* ── SEARCH CARD ── */
+      .search-card {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid var(--gray-100);
+        padding: 28px;
+        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06),
+          0 1px 4px rgba(0, 0, 0, 0.04);
+        margin-bottom: 12px;
+      }
+
+      .search-row {
+        display: flex;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .search-input-wrap {
+        flex: 1;
+        position: relative;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-200);
+        pointer-events: none;
+      }
+
+      #query {
+        width: 100%;
+        height: 52px;
+        padding: 0 16px 0 46px;
+        font-size: 15px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 400;
+        color: var(--gray-900);
+        background: var(--gray-50);
+        border: 1.5px solid var(--gray-100);
+        border-radius: 12px;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      }
+
+      #query::placeholder {
+        color: var(--gray-200);
+      }
+
+      #query:focus {
+        border-color: var(--blue-400);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.12);
+      }
+
+      #method {
+        height: 52px;
+        padding: 0 14px;
+        font-size: 13px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 500;
+        color: var(--gray-800);
+        background: var(--gray-50);
+        border: 1.5px solid var(--gray-100);
+        border-radius: 12px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888780' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+      }
+
+      #method:focus {
+        border-color: var(--blue-400);
+      }
+
+      .search-btn {
+        height: 52px;
+        padding: 0 24px;
+        background: var(--blue-600);
+        color: #fff;
+        font-family: "Outfit", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(24, 95, 165, 0.3);
+      }
+
+      .search-btn:hover {
+        background: var(--blue-800);
+        box-shadow: 0 4px 12px rgba(24, 95, 165, 0.35);
+      }
+      .search-btn:active {
+        transform: scale(0.98);
+      }
+      .search-btn.loading {
+        opacity: 0.7;
+        cursor: wait;
+      }
+
+      /* ── EVAL ROW ── */
+      .eval-row {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--gray-50);
+      }
+
+      .eval-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--gray-400);
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .eval-label::after {
+        content: "optional";
+        font-size: 10px;
+        background: var(--gray-50);
+        color: var(--gray-200);
+        padding: 2px 7px;
+        border-radius: 999px;
+        letter-spacing: 0;
+        text-transform: none;
+        font-weight: 400;
+      }
+
+      #relevant {
+        width: 100%;
+        height: 40px;
+        padding: 0 14px;
+        font-size: 13px;
+        font-family: "DM Mono", monospace;
+        color: var(--gray-800);
+        background: var(--gray-50);
+        border: 1.5px solid var(--gray-100);
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      #relevant::placeholder {
+        color: var(--gray-200);
+        font-family: "Outfit", sans-serif;
+      }
+      #relevant:focus {
+        border-color: var(--blue-400);
+        background: #fff;
+      }
+
+      /* ── STATUS BAR ── */
+      #status-bar {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--gray-400);
+        padding: 0 4px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      #status-bar.visible {
+        opacity: 1;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gray-200);
+        flex-shrink: 0;
+      }
+
+      .status-dot.success {
+        background: var(--teal-400);
+      }
+      .status-dot.empty {
+        background: var(--amber-600);
+      }
+      .status-dot.loading {
+        background: var(--blue-400);
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      /* ── METRICS STRIP ── */
+      .metrics-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+        animation: slideUp 0.3s ease;
+      }
+
+      .metric-tile {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 12px;
+        padding: 14px 16px;
+        text-align: center;
+      }
+
+      .metric-tile .m-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--gray-400);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .metric-tile .m-value {
+        font-family: "DM Mono", monospace;
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--blue-600);
+      }
+
+      /* ── RESULTS ── */
+      #results-wrap {
+        animation: slideUp 0.3s ease;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .results-header {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--gray-400);
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        padding: 0 4px;
+      }
+
+      .result-card {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        animation: slideUp 0.25s ease both;
+      }
+
+      .result-card:hover {
+        border-color: var(--blue-100);
+        box-shadow: 0 4px 16px rgba(55, 138, 221, 0.08);
+      }
+
+      .result-rank {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--blue-50);
+        color: var(--blue-600);
+        font-family: "DM Mono", monospace;
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .result-rank.top {
+        background: var(--blue-600);
+        color: #fff;
+      }
+
+      .result-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .result-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-900);
+        font-family: "DM Mono", monospace;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 4px;
+      }
+
+      .result-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .result-category {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 2px 10px;
+        border-radius: 999px;
+      }
+
+      .cat-sci-med {
+        background: var(--teal-50);
+        color: var(--teal-600);
+      }
+      .cat-sci-space {
+        background: var(--blue-50);
+        color: var(--blue-800);
+      }
+      .cat-comp {
+        background: #f3f0fe;
+        color: #3c3489;
+      }
+      .cat-rec {
+        background: var(--green-50);
+        color: var(--green-600);
+      }
+      .cat-talk {
+        background: var(--amber-50);
+        color: var(--amber-600);
+      }
+      .cat-alt {
+        background: var(--red-50);
+        color: var(--red-600);
+      }
+      .cat-misc {
+        background: var(--gray-50);
+        color: var(--gray-600);
+      }
+      .cat-default {
+        background: var(--gray-50);
+        color: var(--gray-600);
+      }
+
+      .result-score {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        color: var(--gray-400);
+      }
+
+      .score-bar-wrap {
+        flex: 1;
+        height: 3px;
+        background: var(--gray-50);
+        border-radius: 999px;
+        overflow: hidden;
+        max-width: 120px;
+      }
+
+      .score-bar {
+        height: 100%;
+        background: var(--blue-400);
+        border-radius: 999px;
+        transition: width 0.4s ease;
+      }
+
+      .result-preview-link {
+        font-size: 12px;
+        color: var(--blue-400);
+        text-decoration: none;
+        padding: 4px 10px;
+        border: 1px solid var(--blue-100);
+        border-radius: 6px;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        align-self: center;
+      }
+
+      .result-preview-link:hover {
+        background: var(--blue-50);
+      }
+
+      /* ── EMPTY / ERROR STATE ── */
+      .empty-state {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 48px 24px;
+        text-align: center;
+      }
+
+      .empty-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+        opacity: 0.4;
+      }
+
+      .empty-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--gray-800);
+        margin-bottom: 6px;
+      }
+
+      .empty-sub {
+        font-size: 13px;
+        color: var(--gray-400);
+      }
+
+      /* ── METHOD PILLS (quick select) ── */
+      .method-pills {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .method-pill {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--gray-100);
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: "Outfit", sans-serif;
+      }
+
+      .method-pill:hover {
+        border-color: var(--blue-200);
+        color: var(--blue-600);
+      }
+      .method-pill.active {
+        background: var(--blue-600);
+        border-color: var(--blue-600);
+        color: #fff;
+      }
+
+      /* ── SAMPLE QUERIES ── */
+      .sample-queries {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--gray-50);
+      }
+
+      .sample-label {
+        font-size: 11px;
+        color: var(--gray-200);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        align-self: center;
+      }
+
+      .sample-chip {
+        font-size: 12px;
+        color: var(--gray-600);
+        background: var(--gray-50);
+        border: 1px solid var(--gray-100);
+        border-radius: 999px;
+        padding: 4px 12px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .sample-chip:hover {
+        background: var(--blue-50);
+        border-color: var(--blue-100);
+        color: var(--blue-600);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid var(--gray-100);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--gray-200);
+      }
+
+      .footer-brand {
+        font-family: "DM Serif Display", serif;
+        font-size: 14px;
+        color: var(--gray-400);
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 600px) {
+        header {
+          flex-wrap: wrap;
+        }
+        .corpus-badge {
+          margin-left: 0;
+        }
+        .search-row {
+          flex-direction: column;
+        }
+        #method {
+          width: 100%;
+        }
+        .search-btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .metrics-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <!-- HEADER -->
+      <header>
+        <div class="logo-mark">
+          <svg
+            viewBox="0 0 28 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="8" stroke="#B5D4F4" stroke-width="3" />
+            <line
+              x1="18.5"
+              y1="18.5"
+              x2="25"
+              y2="25"
+              stroke="#B5D4F4"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+            <line
+              x1="8"
+              y1="11"
+              x2="16"
+              y2="11"
+              stroke="#378ADD"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="8"
+              y1="14"
+              x2="14"
+              y2="14"
+              stroke="#378ADD"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <div class="header-text">
+          <div class="wordmark">Retri<em>vo</em></div>
+          <div class="tagline">
+            Information Retrieval System · NLP &amp; IR Course Project
+          </div>
+        </div>
+        <div class="corpus-badge" id="corpus-badge">
+          {{ doc_count }} docs indexed
+        </div>
+      </header>
+
+      <!-- METHOD PILLS -->
+      <div class="method-pills">
+        <span class="sample-label">Method</span>
+        <button class="method-pill active" onclick="setMethod('tfidf', this)">
+          TF-IDF + Cosine
+        </button>
+        <button class="method-pill" onclick="setMethod('td_matrix', this)">
+          Term-Document Matrix
+        </button>
+        <button class="method-pill" onclick="setMethod('inverted_index', this)">
+          Inverted Index
+        </button>
+      </div>
+
+      <!-- SEARCH CARD -->
+      <div class="search-card">
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <svg
+              class="search-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+            >
+              <circle cx="8" cy="8" r="6" stroke="#B4B2A9" stroke-width="1.5" />
+              <line
+                x1="12.5"
+                y1="12.5"
+                x2="16"
+                y2="16"
+                stroke="#B4B2A9"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input
+              type="text"
+              id="query"
+              placeholder="Search documents…"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <select id="method" style="display: none">
+              <option value="tfidf">tfidf</option>
+              <option value="td_matrix">td_matrix</option>
+              <option value="inverted_index">inverted_index</option>
+            </select>
+          </div>
+          <button class="search-btn" id="search-btn" onclick="doSearch()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5" />
+              <line
+                x1="11"
+                y1="11"
+                x2="14.5"
+                y2="14.5"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+            Search
+          </button>
+        </div>
+
+        <!-- Sample queries -->
+        <div class="sample-queries">
+          <span class="sample-label">Try</span>
+          <span class="sample-chip" onclick="useQuery('space exploration')"
+            >space exploration</span
+          >
+          <span class="sample-chip" onclick="useQuery('surgery patient')"
+            >surgery patient</span
+          >
+          <span class="sample-chip" onclick="useQuery('machine learning')"
+            >machine learning</span
+          >
+          <span class="sample-chip" onclick="useQuery('hockey game')"
+            >hockey game</span
+          >
+          <span class="sample-chip" onclick="useQuery('democracy election')"
+            >democracy election</span
+          >
+          <span class="sample-chip" onclick="useQuery('computer graphics')"
+            >computer graphics</span
+          >
+        </div>
+
+        <!-- Evaluation input -->
+        <div class="eval-row">
+          <div class="eval-label">Evaluation — relevant documents</div>
+          <input
+            type="text"
+            id="relevant"
+            placeholder="doc_001_sci_med.txt, doc_046_sci_space.txt …"
+          />
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div id="status-bar">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text"></span>
+      </div>
+
+      <!-- METRICS STRIP -->
+      <div id="metrics-wrap"></div>
+
+      <!-- RESULTS -->
+      <div id="results-wrap"></div>
+
+      <!-- FOOTER -->
+      <footer>
+        <span class="footer-brand">Retrivo</span>
+        <span
+          >TF-IDF · Inverted Index · Term-Document Matrix · Cosine
+          Similarity</span
+        >
+      </footer>
+    </div>
+
+    <script>
+      let currentMethod = "tfidf";
+
+      function setMethod(method, btn) {
+        currentMethod = method;
+        document.getElementById("method").value = method;
+        document
+          .querySelectorAll(".method-pill")
+          .forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      function useQuery(q) {
+        document.getElementById("query").value = q;
+        doSearch();
+      }
+
+      function getCategoryClass(docName) {
+        const n = docName.toLowerCase();
+        if (n.includes("sci_med") || n.includes("sci-med"))
+          return "cat-sci-med";
+        if (n.includes("sci_space") || n.includes("sci-space"))
+          return "cat-sci-space";
+        if (n.includes("comp_")) return "cat-comp";
+        if (n.includes("rec_")) return "cat-rec";
+        if (n.includes("talk_")) return "cat-talk";
+        if (n.includes("alt_")) return "cat-alt";
+        if (n.includes("misc_")) return "cat-misc";
+        return "cat-default";
+      }
+
+      function getCategoryLabel(docName) {
+        const n = docName.toLowerCase();
+        if (n.includes("sci_med")) return "sci.med";
+        if (n.includes("sci_space")) return "sci.space";
+        if (n.includes("sci_elect")) return "sci.electronics";
+        if (n.includes("comp_graph")) return "comp.graphics";
+        if (n.includes("comp_")) return "comp";
+        if (n.includes("rec_sport_hock")) return "rec.hockey";
+        if (n.includes("rec_sport_base")) return "rec.baseball";
+        if (n.includes("rec_auto")) return "rec.autos";
+        if (n.includes("rec_")) return "rec";
+        if (n.includes("talk_polit")) return "talk.politics";
+        if (n.includes("talk_")) return "talk";
+        if (n.includes("alt_")) return "alt";
+        if (n.includes("misc_")) return "misc.forsale";
+        return "doc";
+      }
+
+      function setStatus(type, text) {
+        const bar = document.getElementById("status-bar");
+        const dot = document.getElementById("status-dot");
+        const txt = document.getElementById("status-text");
+        dot.className = "status-dot " + type;
+        txt.textContent = text;
+        bar.classList.add("visible");
+      }
+
+      async function doSearch() {
+        const query = document.getElementById("query").value.trim();
+        const method = currentMethod;
+        const relevantRaw = document.getElementById("relevant").value.trim();
+        const relevant = relevantRaw
+          ? relevantRaw
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [];
+
+        if (!query) {
+          document.getElementById("query").focus();
+          return;
+        }
+
+        const btn = document.getElementById("search-btn");
+        btn.classList.add("loading");
+        btn.textContent = "Searching…";
+
+        setStatus("loading", "Searching through corpus…");
+        document.getElementById("metrics-wrap").innerHTML = "";
+        document.getElementById("results-wrap").innerHTML = "";
+
+        try {
+          const res = await fetch("/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query, method, relevant }),
+          });
+          const data = await res.json();
+
+          btn.classList.remove("loading");
+          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
+
+          const count = data.count || 0;
+          const methodLabel = {
+            tfidf: "TF-IDF + Cosine",
+            td_matrix: "Term-Document Matrix",
+            inverted_index: "Inverted Index",
+          }[method];
+
+          if (count === 0) {
+            setStatus(
+              "empty",
+              `No results for "${query}" using ${methodLabel}`
+            );
+            document.getElementById("results-wrap").innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⌀</div>
+            <div class="empty-title">No documents matched</div>
+            <div class="empty-sub">Try a different query or switch to TF-IDF for broader results</div>
+          </div>`;
+            return;
+          }
+
+          setStatus(
+            "success",
+            `${count} result${count > 1 ? "s" : ""} · ${methodLabel}`
+          );
+
+          // Metrics
+          if (data.eval && Object.keys(data.eval).length > 0) {
+            const e = data.eval;
+            document.getElementById("metrics-wrap").innerHTML = `
+          <div class="metrics-strip">
+            <div class="metric-tile"><div class="m-label">Precision</div><div class="m-value">${e.precision}</div></div>
+            <div class="metric-tile"><div class="m-label">Recall</div><div class="m-value">${e.recall}</div></div>
+            <div class="metric-tile"><div class="m-label">F1 Score</div><div class="m-value">${e.f1}</div></div>
+            <div class="metric-tile"><div class="m-label">Avg Precision</div><div class="m-value">${e.ap}</div></div>
+          </div>`;
+          }
+
+          // Results
+          const maxScore = data.results.length > 0 ? data.results[0].score : 1;
+          let html = `<div class="results-header">${count} document${
+            count > 1 ? "s" : ""
+          } retrieved</div>`;
+
+          data.results.forEach((r, i) => {
+            const barWidth =
+              maxScore > 0 ? Math.round((r.score / maxScore) * 100) : 0;
+            const catClass = getCategoryClass(r.doc);
+            const catLabel = getCategoryLabel(r.doc);
+            const isTop = i === 0;
+            const delay = Math.min(i * 40, 200);
+
+            html += `
+          <div class="result-card" style="animation-delay: ${delay}ms">
+            <div class="result-rank ${isTop ? "top" : ""}">${i + 1}</div>
+            <div class="result-body">
+              <div class="result-name">${r.doc}</div>
+              <div class="result-meta">
+                <span class="result-category ${catClass}">${catLabel}</span>
+                <span class="result-score">${r.score.toFixed(4)}</span>
+                <div class="score-bar-wrap">
+                  <div class="score-bar" style="width: ${barWidth}%"></div>
+                </div>
+              </div>
+            </div>
+            <a class="result-preview-link" href="/document/${
+              r.doc
+            }" target="_blank">Preview</a>
+          </div>`;
+          });
+
+          document.getElementById("results-wrap").innerHTML = html;
+        } catch (err) {
+          btn.classList.remove("loading");
+          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
+          setStatus("empty", "Connection error — is the server running?");
+        }
+      }
+
+      document.getElementById("query").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") doSearch();
+      });
+    </script>
+  </body>
 </html>

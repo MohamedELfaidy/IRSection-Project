@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#185FA5"/>
+      <stop offset="100%" stop-color="#0C447C"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded square -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <!-- Magnifying glass circle -->
+  <circle cx="27" cy="27" r="13" fill="none" stroke="#B5D4F4" stroke-width="5"/>
+  <!-- Magnifying glass handle -->
+  <line x1="36.5" y1="36.5" x2="50" y2="50" stroke="#B5D4F4" stroke-width="5" stroke-linecap="round"/>
+  <!-- Inner document lines to suggest IR -->
+  <line x1="21" y1="24" x2="33" y2="24" stroke="#378ADD" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="21" y1="28" x2="30" y2="28" stroke="#378ADD" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="21" y1="32" x2="33" y2="32" stroke="#378ADD" stroke-width="2" stroke-linecap="round"/>
+</svg>

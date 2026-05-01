@@ -83,14 +83,18 @@ def boolean_query_inverted(query, index):
 # ── TF-IDF + COSINE SIMILARITY ────────────────────────────────
 def build_tfidf(raw_docs):
     doc_names = list(raw_docs.keys())
-    corpus = [raw_docs[d] for d in doc_names]
-    vectorizer = TfidfVectorizer(stop_words='english')
+    # Apply same preprocessing so vocab is stemmed
+    corpus = [' '.join(preprocess(raw_docs[d])) for d in doc_names]
+    vectorizer = TfidfVectorizer()
     matrix = vectorizer.fit_transform(corpus)
     return vectorizer, matrix, doc_names
 
 
 def tfidf_query(query, vectorizer, matrix, doc_names, top_k=10):
-    q_vec = vectorizer.transform([query])
+    # Stem the query the same way as documents
+    processed_query = ' '.join(preprocess(query))
+    print(f"Query after preprocessing: {processed_query}")
+    q_vec = vectorizer.transform([processed_query])
     scores = cosine_similarity(q_vec, matrix).flatten()
     ranked_indices = np.argsort(-scores)
     results = [(doc_names[i], round(float(scores[i]), 4))
