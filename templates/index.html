@@ -18,7 +18,6 @@
         margin: 0;
         padding: 0;
       }
-
       :root {
         --blue-50: #e6f1fb;
         --blue-100: #b5d4f4;
@@ -43,12 +42,12 @@
         --amber-600: #854f0b;
         --red-50: #fcebeb;
         --red-600: #a32d2d;
+        --purple-50: #f3f0fe;
+        --purple-600: #3c3489;
       }
-
       html {
         scroll-behavior: smooth;
       }
-
       body {
         font-family: "Outfit", sans-serif;
         background: #f8f7f3;
@@ -56,8 +55,6 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
-
-      /* ── BACKGROUND TEXTURE ── */
       body::before {
         content: "";
         position: fixed;
@@ -71,35 +68,28 @@
             circle at 85% 80%,
             rgba(29, 158, 117, 0.05) 0%,
             transparent 50%
-          ),
-          radial-gradient(
-            circle at 50% 50%,
-            rgba(255, 255, 255, 0.3) 0%,
-            transparent 70%
           );
         pointer-events: none;
         z-index: 0;
       }
-
       .page-wrap {
         position: relative;
         z-index: 1;
-        max-width: 860px;
+        max-width: 880px;
         margin: 0 auto;
-        padding: 0 24px 80px;
+        padding: 0 20px 80px;
       }
 
-      /* ── HEADER ── */
+      /* HEADER */
       header {
-        padding: 48px 0 40px;
+        padding: 40px 0 28px;
         display: flex;
         align-items: flex-start;
-        gap: 20px;
+        gap: 16px;
       }
-
       .logo-mark {
-        width: 52px;
-        height: 52px;
+        width: 50px;
+        height: 50px;
         background: var(--blue-600);
         border-radius: 14px;
         display: flex;
@@ -107,136 +97,268 @@
         justify-content: center;
         flex-shrink: 0;
         box-shadow: 0 4px 16px rgba(24, 95, 165, 0.25);
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.15s, box-shadow 0.15s;
       }
-
+      .logo-mark:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(24, 95, 165, 0.3);
+      }
       .logo-mark svg {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
       }
-
       .header-text {
         padding-top: 2px;
+        flex: 1;
       }
-
       .wordmark {
         font-family: "DM Serif Display", serif;
-        font-size: 32px;
+        font-size: 30px;
         color: var(--blue-800);
         letter-spacing: -0.5px;
         line-height: 1;
       }
-
       .wordmark em {
         font-style: italic;
         color: var(--blue-400);
       }
-
       .tagline {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--gray-400);
-        margin-top: 6px;
-        font-weight: 400;
-        letter-spacing: 0.3px;
+        margin-top: 5px;
       }
-
       .corpus-badge {
-        margin-left: auto;
-        margin-top: 6px;
         background: var(--blue-50);
         color: var(--blue-800);
         font-size: 12px;
         font-weight: 500;
-        padding: 6px 14px;
+        padding: 5px 12px;
         border-radius: 999px;
         border: 1px solid var(--blue-100);
-        white-space: nowrap;
         font-family: "DM Mono", monospace;
+        white-space: nowrap;
       }
 
-      /* ── SEARCH CARD ── */
-      .search-card {
-        background: #fff;
-        border-radius: 20px;
+      /* NAV TABS */
+      .nav-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--gray-50);
         border: 1px solid var(--gray-100);
-        padding: 28px;
-        box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06),
-          0 1px 4px rgba(0, 0, 0, 0.04);
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .nav-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-tab {
+        padding: 7px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gray-600);
+        border-radius: 8px;
+        cursor: pointer;
+        white-space: nowrap;
+        border: none;
+        background: transparent;
+        font-family: "Outfit", sans-serif;
+        transition: all 0.15s;
+      }
+      .nav-tab:hover {
+        color: var(--gray-900);
+        background: rgba(255, 255, 255, 0.6);
+      }
+      .nav-tab.active {
+        background: #fff;
+        color: var(--blue-800);
+        font-weight: 600;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      /* PANELS */
+      .panel {
+        display: none;
+        animation: fadeIn 0.2s ease;
+      }
+      .panel.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* CARD */
+      .card {
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid var(--gray-100);
+        padding: 22px;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
         margin-bottom: 12px;
       }
 
+      /* METHOD PILLS */
+      .method-pills {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .method-pill {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--gray-100);
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        transition: all 0.15s;
+      }
+      .method-pill:hover {
+        border-color: var(--blue-200);
+        color: var(--blue-600);
+      }
+      .method-pill.active {
+        background: var(--blue-600);
+        border-color: var(--blue-600);
+        color: #fff;
+      }
+
+      /* PREP OPTIONS */
+      .prep-options {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 12px 0;
+        border-top: 1px solid var(--gray-50);
+        margin-top: 12px;
+        align-items: center;
+      }
+      .prep-label {
+        font-size: 11px;
+        color: var(--gray-400);
+        font-weight: 500;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+      }
+      .stemmer-pills {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .stemmer-pill {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1.5px solid var(--gray-100);
+        background: #fff;
+        color: var(--gray-600);
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        transition: all 0.15s;
+      }
+      .stemmer-pill:hover {
+        border-color: var(--teal-400);
+        color: var(--teal-600);
+      }
+      .stemmer-pill.active {
+        background: var(--teal-600);
+        border-color: var(--teal-600);
+        color: #fff;
+      }
+      .lemma-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--gray-600);
+        cursor: pointer;
+      }
+      .toggle-switch {
+        width: 32px;
+        height: 18px;
+        background: var(--gray-200);
+        border-radius: 999px;
+        position: relative;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .toggle-switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle-switch.on {
+        background: var(--teal-400);
+      }
+      .toggle-switch.on::after {
+        transform: translateX(14px);
+      }
+
+      /* SEARCH */
       .search-row {
         display: flex;
         gap: 10px;
         align-items: stretch;
       }
-
       .search-input-wrap {
         flex: 1;
         position: relative;
       }
-
       .search-icon {
         position: absolute;
-        left: 16px;
+        left: 14px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--gray-200);
         pointer-events: none;
       }
-
       #query {
         width: 100%;
-        height: 52px;
-        padding: 0 16px 0 46px;
+        height: 50px;
+        padding: 0 14px 0 44px;
         font-size: 15px;
         font-family: "Outfit", sans-serif;
-        font-weight: 400;
         color: var(--gray-900);
         background: var(--gray-50);
         border: 1.5px solid var(--gray-100);
         border-radius: 12px;
         outline: none;
-        transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+        transition: all 0.2s;
       }
-
       #query::placeholder {
         color: var(--gray-200);
       }
-
       #query:focus {
         border-color: var(--blue-400);
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.12);
+        box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.1);
       }
-
-      #method {
-        height: 52px;
-        padding: 0 14px;
-        font-size: 13px;
-        font-family: "Outfit", sans-serif;
-        font-weight: 500;
-        color: var(--gray-800);
-        background: var(--gray-50);
-        border: 1.5px solid var(--gray-100);
-        border-radius: 12px;
-        outline: none;
-        cursor: pointer;
-        transition: border-color 0.2s;
-        appearance: none;
-        -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888780' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        padding-right: 32px;
-      }
-
-      #method:focus {
-        border-color: var(--blue-400);
-      }
-
       .search-btn {
-        height: 52px;
-        padding: 0 24px;
+        height: 50px;
+        padding: 0 22px;
         background: var(--blue-600);
         color: #fff;
         font-family: "Outfit", sans-serif;
@@ -245,17 +367,15 @@
         border: none;
         border-radius: 12px;
         cursor: pointer;
-        transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
         display: flex;
         align-items: center;
         gap: 8px;
         white-space: nowrap;
         box-shadow: 0 2px 8px rgba(24, 95, 165, 0.3);
+        transition: all 0.15s;
       }
-
       .search-btn:hover {
         background: var(--blue-800);
-        box-shadow: 0 4px 12px rgba(24, 95, 165, 0.35);
       }
       .search-btn:active {
         transform: scale(0.98);
@@ -265,25 +385,86 @@
         cursor: wait;
       }
 
-      /* ── EVAL ROW ── */
-      .eval-row {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid var(--gray-50);
+      /* OPERATOR HINT */
+      .operator-hint {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        align-items: center;
+      }
+      .op-badge {
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: var(--gray-50);
+        color: var(--gray-600);
+        border: 1px solid var(--gray-100);
+      }
+      .op-badge.and {
+        background: var(--blue-50);
+        color: var(--blue-800);
+      }
+      .op-badge.or {
+        background: var(--teal-50);
+        color: var(--teal-600);
+      }
+      .op-badge.not {
+        background: var(--red-50);
+        color: var(--red-600);
       }
 
+      /* SAMPLE QUERIES */
+      .sample-queries {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--gray-50);
+      }
+      .sample-label {
+        font-size: 11px;
+        color: var(--gray-200);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        align-self: center;
+      }
+      .sample-chip {
+        font-size: 12px;
+        color: var(--gray-600);
+        background: var(--gray-50);
+        border: 1px solid var(--gray-100);
+        border-radius: 999px;
+        padding: 4px 12px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .sample-chip:hover {
+        background: var(--blue-50);
+        border-color: var(--blue-100);
+        color: var(--blue-600);
+      }
+
+      /* EVAL ROW */
+      .eval-row {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--gray-50);
+      }
       .eval-label {
         font-size: 11px;
         font-weight: 500;
         color: var(--gray-400);
-        letter-spacing: 0.8px;
+        letter-spacing: 0.7px;
         text-transform: uppercase;
-        margin-bottom: 8px;
+        margin-bottom: 7px;
         display: flex;
         align-items: center;
         gap: 6px;
       }
-
       .eval-label::after {
         content: "optional";
         font-size: 10px;
@@ -295,12 +476,11 @@
         text-transform: none;
         font-weight: 400;
       }
-
       #relevant {
         width: 100%;
-        height: 40px;
-        padding: 0 14px;
-        font-size: 13px;
+        height: 38px;
+        padding: 0 12px;
+        font-size: 12px;
         font-family: "DM Mono", monospace;
         color: var(--gray-800);
         background: var(--gray-50);
@@ -309,19 +489,14 @@
         outline: none;
         transition: border-color 0.2s;
       }
-
-      #relevant::placeholder {
-        color: var(--gray-200);
-        font-family: "Outfit", sans-serif;
-      }
       #relevant:focus {
         border-color: var(--blue-400);
         background: #fff;
       }
 
-      /* ── STATUS BAR ── */
+      /* STATUS */
       #status-bar {
-        height: 32px;
+        height: 30px;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -331,11 +506,9 @@
         opacity: 0;
         transition: opacity 0.3s;
       }
-
       #status-bar.visible {
         opacity: 1;
       }
-
       .status-dot {
         width: 6px;
         height: 6px;
@@ -343,7 +516,6 @@
         background: var(--gray-200);
         flex-shrink: 0;
       }
-
       .status-dot.success {
         background: var(--teal-400);
       }
@@ -354,7 +526,6 @@
         background: var(--blue-400);
         animation: pulse 1s infinite;
       }
-
       @keyframes pulse {
         0%,
         100% {
@@ -365,15 +536,95 @@
         }
       }
 
-      /* ── METRICS STRIP ── */
+      /* TRACE */
+      .trace-card {
+        background: var(--blue-900);
+        border-radius: 12px;
+        padding: 14px 18px;
+        animation: fadeIn 0.2s ease;
+        margin-bottom: 12px;
+      }
+      .trace-title {
+        font-size: 11px;
+        color: var(--blue-100);
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .trace-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+        align-items: flex-start;
+      }
+      .trace-step {
+        font-size: 11px;
+        color: var(--blue-200);
+        font-weight: 500;
+        min-width: 90px;
+        padding-top: 2px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .trace-tokens {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .trace-token {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 5px;
+      }
+      .trace-token.final {
+        background: rgba(29, 158, 117, 0.3);
+        color: #7fe8c2;
+      }
+      .compare-title {
+        font-size: 11px;
+        color: rgba(181, 212, 244, 0.7);
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-top: 14px;
+        margin-bottom: 8px;
+      }
+      .compare-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .compare-col-label {
+        font-size: 10px;
+        color: rgba(181, 212, 244, 0.6);
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .compare-token {
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.07);
+        padding: 2px 7px;
+        border-radius: 4px;
+        margin-bottom: 3px;
+        display: inline-block;
+      }
+
+      /* METRICS */
       .metrics-strip {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 10px;
-        margin-bottom: 16px;
-        animation: slideUp 0.3s ease;
+        margin-bottom: 12px;
+        animation: fadeIn 0.3s ease;
       }
-
       .metric-tile {
         background: #fff;
         border: 1px solid var(--gray-100);
@@ -381,7 +632,6 @@
         padding: 14px 16px;
         text-align: center;
       }
-
       .metric-tile .m-label {
         font-size: 11px;
         font-weight: 500;
@@ -390,7 +640,6 @@
         text-transform: uppercase;
         margin-bottom: 4px;
       }
-
       .metric-tile .m-value {
         font-family: "DM Mono", monospace;
         font-size: 22px;
@@ -398,22 +647,7 @@
         color: var(--blue-600);
       }
 
-      /* ── RESULTS ── */
-      #results-wrap {
-        animation: slideUp 0.3s ease;
-      }
-
-      @keyframes slideUp {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
+      /* RESULTS */
       .results-header {
         font-size: 11px;
         font-weight: 500;
@@ -423,28 +657,25 @@
         margin-bottom: 10px;
         padding: 0 4px;
       }
-
       .result-card {
         background: #fff;
         border: 1px solid var(--gray-100);
         border-radius: 14px;
-        padding: 18px 20px;
+        padding: 16px 18px;
         margin-bottom: 8px;
         display: flex;
         align-items: flex-start;
-        gap: 16px;
+        gap: 14px;
         transition: border-color 0.15s, box-shadow 0.15s;
-        animation: slideUp 0.25s ease both;
+        animation: fadeIn 0.25s ease both;
       }
-
       .result-card:hover {
         border-color: var(--blue-100);
         box-shadow: 0 4px 16px rgba(55, 138, 221, 0.08);
       }
-
       .result-rank {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         border-radius: 8px;
         background: var(--blue-50);
         color: var(--blue-600);
@@ -457,96 +688,79 @@
         flex-shrink: 0;
         margin-top: 1px;
       }
-
       .result-rank.top {
         background: var(--blue-600);
         color: #fff;
       }
-
       .result-body {
         flex: 1;
         min-width: 0;
       }
-
       .result-name {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 500;
         color: var(--gray-900);
         font-family: "DM Mono", monospace;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        margin-bottom: 4px;
+        margin-bottom: 5px;
       }
-
       .result-meta {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        flex-wrap: wrap;
       }
-
       .result-category {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
-        padding: 2px 10px;
+        padding: 2px 9px;
         border-radius: 999px;
       }
-
-      .cat-sci-med {
+      .cat-medicine {
         background: var(--teal-50);
         color: var(--teal-600);
       }
-      .cat-sci-space {
+      .cat-space {
         background: var(--blue-50);
         color: var(--blue-800);
       }
-      .cat-comp {
-        background: #f3f0fe;
-        color: #3c3489;
+      .cat-cs {
+        background: var(--purple-50);
+        color: var(--purple-600);
       }
-      .cat-rec {
+      .cat-sports {
         background: var(--green-50);
         color: var(--green-600);
       }
-      .cat-talk {
+      .cat-politics {
         background: var(--amber-50);
         color: var(--amber-600);
-      }
-      .cat-alt {
-        background: var(--red-50);
-        color: var(--red-600);
-      }
-      .cat-misc {
-        background: var(--gray-50);
-        color: var(--gray-600);
       }
       .cat-default {
         background: var(--gray-50);
         color: var(--gray-600);
       }
-
       .result-score {
         font-family: "DM Mono", monospace;
         font-size: 12px;
         color: var(--gray-400);
       }
-
       .score-bar-wrap {
         flex: 1;
         height: 3px;
         background: var(--gray-50);
         border-radius: 999px;
         overflow: hidden;
-        max-width: 120px;
+        max-width: 100px;
       }
-
       .score-bar {
         height: 100%;
         background: var(--blue-400);
         border-radius: 999px;
         transition: width 0.4s ease;
       }
-
       .result-preview-link {
         font-size: 12px;
         color: var(--blue-400);
@@ -558,162 +772,599 @@
         flex-shrink: 0;
         align-self: center;
       }
-
       .result-preview-link:hover {
         background: var(--blue-50);
       }
 
-      /* ── EMPTY / ERROR STATE ── */
+      /* EMPTY STATE */
       .empty-state {
         background: #fff;
         border: 1px solid var(--gray-100);
         border-radius: 14px;
-        padding: 48px 24px;
+        padding: 44px 24px;
         text-align: center;
       }
-
       .empty-icon {
-        font-size: 36px;
-        margin-bottom: 12px;
+        font-size: 32px;
+        margin-bottom: 10px;
         opacity: 0.4;
       }
-
       .empty-title {
         font-size: 15px;
         font-weight: 500;
         color: var(--gray-800);
-        margin-bottom: 6px;
+        margin-bottom: 5px;
       }
-
       .empty-sub {
         font-size: 13px;
         color: var(--gray-400);
       }
 
-      /* ── METHOD PILLS (quick select) ── */
-      .method-pills {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
+      /* MODAL */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
       }
-
-      .method-pill {
-        font-size: 12px;
-        font-weight: 500;
-        padding: 5px 14px;
-        border-radius: 999px;
-        border: 1.5px solid var(--gray-100);
+      .modal-overlay.open {
+        display: flex;
+        animation: fadeIn 0.2s ease;
+      }
+      .modal {
         background: #fff;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 640px;
+        max-height: 85vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      }
+      .modal-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-100);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .modal-title {
+        font-family: "DM Mono", monospace;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--gray-800);
+      }
+      .modal-close {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        border: none;
+        background: var(--gray-50);
         color: var(--gray-600);
         cursor: pointer;
-        transition: all 0.15s;
-        font-family: "Outfit", sans-serif;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .modal-close:hover {
+        background: var(--gray-100);
+      }
+      .modal-body {
+        padding: 18px 20px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .modal-section-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--gray-400);
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .modal-text {
+        font-size: 14px;
+        color: var(--gray-800);
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+      .weights-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .weight-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--gray-50);
+        border-radius: 8px;
+        padding: 7px 12px;
+        gap: 8px;
+      }
+      .weight-term {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        color: var(--gray-800);
+        min-width: 80px;
+      }
+      .weight-bar-wrap {
+        flex: 1;
+        height: 3px;
+        background: var(--gray-100);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .weight-bar {
+        height: 100%;
+        background: var(--blue-400);
+        border-radius: 999px;
+      }
+      .weight-score {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        color: var(--blue-600);
+        font-weight: 500;
       }
 
-      .method-pill:hover {
-        border-color: var(--blue-200);
+      /* STATS */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .stats-big-card {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .stats-big-num {
+        font-family: "DM Mono", monospace;
+        font-size: 36px;
+        font-weight: 500;
         color: var(--blue-600);
       }
-      .method-pill.active {
-        background: var(--blue-600);
-        border-color: var(--blue-600);
+      .stats-big-label {
+        font-size: 13px;
+        color: var(--gray-400);
+        margin-top: 4px;
+      }
+      .stats-section {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 18px 20px;
+        margin-bottom: 12px;
+      }
+      .stats-section-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .stats-badge {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 500;
+      }
+      .badge-blue {
+        background: var(--blue-50);
+        color: var(--blue-600);
+      }
+      .badge-teal {
+        background: var(--teal-50);
+        color: var(--teal-600);
+      }
+      .badge-amber {
+        background: var(--amber-50);
+        color: var(--amber-600);
+      }
+      .term-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--gray-50);
+      }
+      .term-row:last-child {
+        border-bottom: none;
+      }
+      .term-word {
+        font-family: "DM Mono", monospace;
+        font-size: 13px;
+        color: var(--gray-900);
+        min-width: 110px;
+      }
+      .term-bar-wrap {
+        flex: 1;
+        height: 6px;
+        background: var(--gray-50);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .term-bar {
+        height: 100%;
+        border-radius: 999px;
+        transition: width 0.5s ease;
+      }
+      .bar-blue {
+        background: var(--blue-400);
+      }
+      .bar-teal {
+        background: var(--teal-400);
+      }
+      .bar-amber {
+        background: var(--amber-600);
+      }
+      .term-val {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        color: var(--gray-400);
+        min-width: 48px;
+        text-align: right;
+      }
+
+      /* MAP */
+      .map-hero {
+        background: linear-gradient(135deg, var(--blue-800), var(--blue-600));
+        border-radius: 16px;
+        padding: 28px;
+        text-align: center;
+        margin-bottom: 16px;
         color: #fff;
       }
-
-      /* ── SAMPLE QUERIES ── */
-      .sample-queries {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 14px;
-        padding-top: 14px;
-        border-top: 1px solid var(--gray-50);
-      }
-
-      .sample-label {
-        font-size: 11px;
-        color: var(--gray-200);
+      .map-score {
+        font-family: "DM Mono", monospace;
+        font-size: 56px;
         font-weight: 500;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        align-self: center;
+        line-height: 1;
       }
-
-      .sample-chip {
-        font-size: 12px;
-        color: var(--gray-600);
-        background: var(--gray-50);
-        border: 1px solid var(--gray-100);
-        border-radius: 999px;
-        padding: 4px 12px;
+      .map-label {
+        font-size: 13px;
+        opacity: 0.7;
+        margin-top: 6px;
+      }
+      .map-run-btn {
+        height: 46px;
+        padding: 0 28px;
+        background: var(--blue-600);
+        color: #fff;
+        font-family: "Outfit", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 auto 16px;
+        box-shadow: 0 2px 8px rgba(24, 95, 165, 0.3);
         transition: all 0.15s;
       }
-
-      .sample-chip:hover {
-        background: var(--blue-50);
-        border-color: var(--blue-100);
+      .map-run-btn:hover {
+        background: var(--blue-800);
+      }
+      .map-query-card {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 8px;
+      }
+      .map-query-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .map-query-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-900);
+      }
+      .map-metrics-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .map-metric {
+        text-align: center;
+        background: var(--gray-50);
+        border-radius: 8px;
+        padding: 8px;
+      }
+      .map-metric-val {
+        font-family: "DM Mono", monospace;
+        font-size: 16px;
+        font-weight: 500;
         color: var(--blue-600);
       }
+      .map-metric-lbl {
+        font-size: 10px;
+        color: var(--gray-400);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
+      }
 
-      /* ── FOOTER ── */
+      /* TEAM */
+      .supervision-card {
+        background: linear-gradient(
+          135deg,
+          var(--blue-900) 0%,
+          var(--blue-800) 100%
+        );
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+      }
+      .supervision-left {
+        flex: 1;
+        min-width: 200px;
+      }
+      .supervision-uni {
+        font-size: 11px;
+        color: var(--blue-200);
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .supervision-name {
+        font-family: "DM Serif Display", serif;
+        font-size: 20px;
+        color: #fff;
+        margin-bottom: 2px;
+        line-height: 1.3;
+      }
+      .supervision-college {
+        font-size: 12px;
+        color: var(--blue-100);
+        opacity: 0.8;
+      }
+      .supervision-right {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .supervisor-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .supervisor-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #fff;
+        font-weight: 600;
+        flex-shrink: 0;
+        font-family: "DM Serif Display", serif;
+      }
+      .supervisor-title {
+        font-size: 10px;
+        color: var(--blue-200);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .supervisor-name {
+        font-size: 13px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .team-title {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--gray-400);
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+      .member-card {
+        background: #fff;
+        border: 1px solid var(--gray-100);
+        border-radius: 14px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.18s;
+      }
+      .member-card:hover {
+        border-color: var(--blue-200);
+        box-shadow: 0 6px 20px rgba(55, 138, 221, 0.1);
+        transform: translateY(-2px);
+      }
+      .member-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--blue-600), var(--blue-400));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        color: #fff;
+        font-weight: 600;
+        flex-shrink: 0;
+        font-family: "DM Serif Display", serif;
+      }
+      .member-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .member-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--gray-900);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .member-role {
+        font-size: 12px;
+        color: var(--gray-400);
+        margin-top: 2px;
+      }
+      .member-li {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: var(--blue-50);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.15s;
+      }
+      .member-card:hover .member-li {
+        background: var(--blue-600);
+      }
+      .member-card:hover .member-li path {
+        fill: #fff;
+      }
+
+      /* FOOTER */
       footer {
         margin-top: 48px;
-        padding-top: 24px;
+        padding-top: 20px;
         border-top: 1px solid var(--gray-100);
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: 12px;
         color: var(--gray-200);
+        flex-wrap: wrap;
+        gap: 8px;
       }
-
       .footer-brand {
         font-family: "DM Serif Display", serif;
         font-size: 14px;
         color: var(--gray-400);
       }
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 600px) {
+      /* RESPONSIVE */
+      @media (max-width: 640px) {
+        .page-wrap {
+          padding: 0 14px 60px;
+        }
         header {
+          padding: 24px 0 18px;
           flex-wrap: wrap;
         }
-        .corpus-badge {
-          margin-left: 0;
+        .wordmark {
+          font-size: 24px;
+        }
+        .nav-tab {
+          font-size: 12px;
+          padding: 6px 11px;
+        }
+        .card {
+          padding: 16px;
+          border-radius: 16px;
         }
         .search-row {
           flex-direction: column;
-        }
-        #method {
-          width: 100%;
+          gap: 8px;
         }
         .search-btn {
           width: 100%;
           justify-content: center;
         }
+        .prep-options {
+          flex-direction: column;
+          gap: 8px;
+          align-items: flex-start;
+        }
         .metrics-strip {
           grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .metric-tile .m-value {
+          font-size: 18px;
+        }
+        .result-card {
+          padding: 12px;
+          gap: 10px;
+        }
+        .result-rank {
+          width: 26px;
+          height: 26px;
+          font-size: 11px;
+        }
+        .result-name {
+          font-size: 11px;
+        }
+        .result-preview-link {
+          display: none;
+        }
+        .score-bar-wrap {
+          display: none;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .compare-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .map-metrics-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .map-score {
+          font-size: 42px;
+        }
+        .team-grid {
+          grid-template-columns: 1fr;
+        }
+        .supervision-card {
+          flex-direction: column;
+        }
+        .weights-grid {
+          grid-template-columns: 1fr;
+        }
+        footer {
+          flex-direction: column;
+          text-align: center;
         }
       }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <!-- HEADER -->
       <header>
-        <a
-          class="logo-mark"
-          href="/"
-          id="logo-link"
-          style="text-decoration: none; cursor: pointer"
-        >
-          <svg
-            viewBox="0 0 28 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+        <a class="logo-mark" id="logo-link" href="/">
+          <svg viewBox="0 0 28 28" fill="none">
             <circle cx="12" cy="12" r="8" stroke="#B5D4F4" stroke-width="3" />
             <line
               x1="18.5"
@@ -747,145 +1398,593 @@
         <div class="header-text">
           <div class="wordmark">Retri<em>vo</em></div>
           <div class="tagline">
-            Information Retrieval System · NLP &amp; IR Course Project
+            Information Retrieval System · Minia University
           </div>
         </div>
-        <div class="corpus-badge" id="corpus-badge">
-          {{ doc_count }} docs indexed
-        </div>
+        <div class="corpus-badge" id="corpus-badge">{{ doc_count }} docs</div>
       </header>
 
-      <!-- METHOD PILLS -->
-      <div class="method-pills">
-        <span class="sample-label">Method</span>
-        <button class="method-pill active" onclick="setMethod('tfidf', this)">
-          TF-IDF + Cosine
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showPanel('search',this)">
+          🔍 Search
         </button>
-        <button class="method-pill" onclick="setMethod('td_matrix', this)">
-          Term-Document Matrix
+        <button class="nav-tab" onclick="showPanel('stats',this)">
+          📊 Vocab Stats
         </button>
-        <button class="method-pill" onclick="setMethod('inverted_index', this)">
-          Inverted Index
+        <button class="nav-tab" onclick="showPanel('map',this)">
+          🎯 MAP Eval
+        </button>
+        <button class="nav-tab" onclick="showPanel('team',this)">
+          👥 Team
         </button>
       </div>
 
-      <!-- SEARCH CARD -->
-      <div class="search-card">
-        <div class="search-row">
-          <div class="search-input-wrap">
-            <svg
-              class="search-icon"
-              width="18"
-              height="18"
-              viewBox="0 0 18 18"
-              fill="none"
-            >
-              <circle cx="8" cy="8" r="6" stroke="#B4B2A9" stroke-width="1.5" />
-              <line
-                x1="12.5"
-                y1="12.5"
-                x2="16"
-                y2="16"
-                stroke="#B4B2A9"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
-            <input
-              type="text"
-              id="query"
-              placeholder="Search documents…"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <select id="method" style="display: none">
-              <option value="tfidf">tfidf</option>
-              <option value="td_matrix">td_matrix</option>
-              <option value="inverted_index">inverted_index</option>
-            </select>
-          </div>
-          <button class="search-btn" id="search-btn" onclick="doSearch()">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5" />
-              <line
-                x1="11"
-                y1="11"
-                x2="14.5"
-                y2="14.5"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
-            Search
+      <!-- SEARCH PANEL -->
+      <div class="panel active" id="panel-search">
+        <div class="method-pills">
+          <span
+            style="
+              font-size: 11px;
+              color: var(--gray-400);
+              font-weight: 500;
+              letter-spacing: 0.6px;
+              text-transform: uppercase;
+              align-self: center;
+            "
+            >Method</span
+          >
+          <button class="method-pill active" onclick="setMethod('tfidf',this)">
+            TF-IDF + Cosine
+          </button>
+          <button class="method-pill" onclick="setMethod('td_matrix',this)">
+            Term-Document Matrix
+          </button>
+          <button
+            class="method-pill"
+            onclick="setMethod('inverted_index',this)"
+          >
+            Inverted Index
           </button>
         </div>
+        <div class="card">
+          <div class="search-row">
+            <div class="search-input-wrap">
+              <svg
+                class="search-icon"
+                width="17"
+                height="17"
+                viewBox="0 0 18 18"
+                fill="none"
+              >
+                <circle
+                  cx="8"
+                  cy="8"
+                  r="6"
+                  stroke="#B4B2A9"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="12.5"
+                  y1="12.5"
+                  x2="16"
+                  y2="16"
+                  stroke="#B4B2A9"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <input
+                type="text"
+                id="query"
+                placeholder="Search documents…"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <button class="search-btn" id="search-btn" onclick="doSearch()">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                <circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5" />
+                <line
+                  x1="11"
+                  y1="11"
+                  x2="14.5"
+                  y2="14.5"
+                  stroke="white"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              Search
+            </button>
+          </div>
+          <div class="operator-hint" id="op-hint" style="display: none">
+            <span style="font-size: 11px; color: var(--gray-400)"
+              >Operators:</span
+            >
+            <span class="op-badge and">AND</span
+            ><span class="op-badge or">OR</span
+            ><span class="op-badge not">NOT</span>
+            <span style="font-size: 11px; color: var(--gray-400)"
+              >e.g. space AND nasa NOT military</span
+            >
+          </div>
+          <div class="prep-options">
+            <span class="prep-label">Stemmer</span>
+            <div class="stemmer-pills">
+              <button
+                class="stemmer-pill active"
+                onclick="setStemmer('porter',this)"
+              >
+                Porter
+              </button>
+              <button
+                class="stemmer-pill"
+                onclick="setStemmer('snowball',this)"
+              >
+                Snowball
+              </button>
+              <button
+                class="stemmer-pill"
+                onclick="setStemmer('lancaster',this)"
+              >
+                Lancaster
+              </button>
+            </div>
+            <div class="lemma-toggle" onclick="toggleLemma(this)">
+              <div class="toggle-switch" id="lemma-toggle"></div>
+              <span>Use Lemmatizer</span>
+            </div>
+          </div>
+          <div class="sample-queries">
+            <span class="sample-label">Try</span>
+            <span class="sample-chip" onclick="useQuery('space exploration')"
+              >space exploration</span
+            >
+            <span class="sample-chip" onclick="useQuery('surgery patient')"
+              >surgery patient</span
+            >
+            <span class="sample-chip" onclick="useQuery('machine learning')"
+              >machine learning</span
+            >
+            <span class="sample-chip" onclick="useQuery('hockey OR baseball')"
+              >hockey OR baseball</span
+            >
+            <span class="sample-chip" onclick="useQuery('democracy election')"
+              >democracy election</span
+            >
+            <span class="sample-chip" onclick="useQuery('space NOT military')"
+              >space NOT military</span
+            >
+          </div>
+          <div class="eval-row">
+            <div class="eval-label">Relevant documents for evaluation</div>
+            <input
+              type="text"
+              id="relevant"
+              placeholder="doc_001_medicine_Surgery.txt, doc_046_space_NASA.txt …"
+            />
+          </div>
+        </div>
+        <div id="status-bar">
+          <div class="status-dot" id="status-dot"></div>
+          <span id="status-text"></span>
+        </div>
+        <div id="trace-wrap"></div>
+        <div id="metrics-wrap"></div>
+        <div id="results-wrap"></div>
+      </div>
 
-        <!-- Sample queries -->
-        <div class="sample-queries">
-          <span class="sample-label">Try</span>
-          <span class="sample-chip" onclick="useQuery('space exploration')"
-            >space exploration</span
+      <!-- STATS PANEL -->
+      <div class="panel" id="panel-stats">
+        <div class="card" style="text-align: center; padding: 28px 24px">
+          <div style="font-size: 30px; margin-bottom: 8px">📊</div>
+          <div
+            style="
+              font-size: 16px;
+              font-weight: 600;
+              color: var(--gray-800);
+              margin-bottom: 6px;
+            "
           >
-          <span class="sample-chip" onclick="useQuery('surgery patient')"
-            >surgery patient</span
+            Vocabulary &amp; IDF Statistics
+          </div>
+          <div
+            style="font-size: 13px; color: var(--gray-400); margin-bottom: 18px"
           >
-          <span class="sample-chip" onclick="useQuery('machine learning')"
-            >machine learning</span
+            Explore term frequencies and IDF scores across the corpus
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 6px;
+              justify-content: center;
+              flex-wrap: wrap;
+              margin-bottom: 16px;
+            "
           >
-          <span class="sample-chip" onclick="useQuery('hockey game')"
-            >hockey game</span
+            <span class="prep-label" style="align-self: center">Stemmer</span>
+            <button
+              class="stemmer-pill active"
+              id="sp-porter"
+              onclick="setStatsStemmer('porter',this)"
+            >
+              Porter
+            </button>
+            <button
+              class="stemmer-pill"
+              id="sp-snowball"
+              onclick="setStatsStemmer('snowball',this)"
+            >
+              Snowball
+            </button>
+            <button
+              class="stemmer-pill"
+              id="sp-lancaster"
+              onclick="setStatsStemmer('lancaster',this)"
+            >
+              Lancaster
+            </button>
+          </div>
+          <button class="map-run-btn" onclick="loadStats()">
+            Load Statistics
+          </button>
+        </div>
+        <div id="stats-content"></div>
+      </div>
+
+      <!-- MAP PANEL -->
+      <div class="panel" id="panel-map">
+        <div class="card" style="text-align: center; padding: 28px 24px">
+          <div style="font-size: 30px; margin-bottom: 8px">🎯</div>
+          <div
+            style="
+              font-size: 16px;
+              font-weight: 600;
+              color: var(--gray-800);
+              margin-bottom: 6px;
+            "
           >
-          <span class="sample-chip" onclick="useQuery('democracy election')"
-            >democracy election</span
+            Mean Average Precision
+          </div>
+          <div
+            style="font-size: 13px; color: var(--gray-400); margin-bottom: 18px"
           >
-          <span class="sample-chip" onclick="useQuery('computer graphics')"
-            >computer graphics</span
+            Evaluates the system across 5 predefined domain queries with known
+            relevant documents
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 6px;
+              justify-content: center;
+              flex-wrap: wrap;
+              margin-bottom: 16px;
+            "
           >
+            <span class="prep-label" style="align-self: center">Stemmer</span>
+            <button
+              class="stemmer-pill active"
+              id="mp-porter"
+              onclick="setMapStemmer('porter',this)"
+            >
+              Porter
+            </button>
+            <button
+              class="stemmer-pill"
+              id="mp-snowball"
+              onclick="setMapStemmer('snowball',this)"
+            >
+              Snowball
+            </button>
+            <button
+              class="stemmer-pill"
+              id="mp-lancaster"
+              onclick="setMapStemmer('lancaster',this)"
+            >
+              Lancaster
+            </button>
+          </div>
+          <button class="map-run-btn" onclick="runMAP()">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <polygon points="4,2 14,8 4,14" fill="white" />
+            </svg>
+            Run MAP Evaluation
+          </button>
+        </div>
+        <div id="map-content"></div>
+      </div>
+
+      <!-- TEAM PANEL -->
+      <div class="panel" id="panel-team">
+        <div class="supervision-card">
+          <div class="supervision-left">
+            <div class="supervision-uni">Minia University</div>
+            <div class="supervision-name">
+              Faculty of Computers<br />and Information
+            </div>
+            <div class="supervision-college">
+              Information Retrieval Course · Spring 2025–2026
+            </div>
+          </div>
+          <div class="supervision-right">
+            <div class="supervisor-row">
+              <div class="supervisor-avatar">E</div>
+              <div>
+                <div class="supervisor-title">Course Instructor</div>
+                <div class="supervisor-name">Dr. Ebtissam AbdelHakam</div>
+              </div>
+            </div>
+            <div class="supervisor-row">
+              <div class="supervisor-avatar">M</div>
+              <div>
+                <div class="supervisor-title">Teaching Assistant</div>
+                <div class="supervisor-name">Eng. Marco Edwar</div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Evaluation input -->
-        <div class="eval-row">
-          <div class="eval-label">Evaluation — relevant documents</div>
-          <input
-            type="text"
-            id="relevant"
-            placeholder="doc_001_sci_med.txt, doc_046_sci_space.txt …"
-          />
+        <div class="team-title">Project Team</div>
+        <div class="team-grid">
+          <a
+            class="member-card"
+            href="https://www.linkedin.com/in/mohamed-sayed-60ba8b264"
+            target="_blank"
+            rel="noopener"
+          >
+            <div class="member-avatar">M</div>
+            <div class="member-info">
+              <div class="member-name">Mohamed Sayed Saad</div>
+              <div class="member-role">IR Project · Team Member</div>
+            </div>
+            <div class="member-li">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path
+                  fill="#185FA5"
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </div>
+          </a>
+
+          <a
+            class="member-card"
+            href="https://www.linkedin.com/in/mohamed-sayed-60ba8b264"
+            target="_blank"
+            rel="noopener"
+          >
+            <div
+              class="member-avatar"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--teal-600),
+                  var(--teal-400)
+                );
+              "
+            >
+              A
+            </div>
+            <div class="member-info">
+              <div class="member-name">Ammar Yasser AbdEllatif</div>
+              <div class="member-role">IR Project · Team Member</div>
+            </div>
+            <div class="member-li">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path
+                  fill="#185FA5"
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </div>
+          </a>
+
+          <a
+            class="member-card"
+            href="https://www.linkedin.com/in/mohamed-sayed-60ba8b264"
+            target="_blank"
+            rel="noopener"
+          >
+            <div
+              class="member-avatar"
+              style="
+                background: linear-gradient(135deg, var(--purple-600), #6c63ff);
+              "
+            >
+              B
+            </div>
+            <div class="member-info">
+              <div class="member-name">Beshoy Farouk Gaber</div>
+              <div class="member-role">IR Project · Team Member</div>
+            </div>
+            <div class="member-li">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path
+                  fill="#185FA5"
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </div>
+          </a>
+
+          <a
+            class="member-card"
+            href="https://www.linkedin.com/in/hussien-mohammed-426947257"
+            target="_blank"
+            rel="noopener"
+          >
+            <div
+              class="member-avatar"
+              style="
+                background: linear-gradient(135deg, var(--amber-600), #f59e0b);
+              "
+            >
+              H
+            </div>
+            <div class="member-info">
+              <div class="member-name">Hussien Mohamed Haggag</div>
+              <div class="member-role">IR Project · Team Member</div>
+            </div>
+            <div class="member-li">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path
+                  fill="#185FA5"
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </div>
+          </a>
+
+          <a
+            class="member-card"
+            href="https://www.linkedin.com/in/michael-hany-572034262"
+            target="_blank"
+            rel="noopener"
+          >
+            <div
+              class="member-avatar"
+              style="
+                background: linear-gradient(135deg, var(--red-600), #ef4444);
+              "
+            >
+              M
+            </div>
+            <div class="member-info">
+              <div class="member-name">Michael Hany Kamal</div>
+              <div class="member-role">IR Project · Team Member</div>
+            </div>
+            <div class="member-li">
+              <svg width="14" height="14" viewBox="0 0 24 24">
+                <path
+                  fill="#185FA5"
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </div>
+          </a>
         </div>
       </div>
 
-      <!-- STATUS BAR -->
-      <div id="status-bar">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-text"></span>
-      </div>
-
-      <!-- METRICS STRIP -->
-      <div id="metrics-wrap"></div>
-
-      <!-- RESULTS -->
-      <div id="results-wrap"></div>
-
-      <!-- FOOTER -->
       <footer>
         <span class="footer-brand">Retrivo</span>
         <span
-          >TF-IDF · Inverted Index · Term-Document Matrix · Cosine
-          Similarity</span
+          >TF-IDF · Inverted Index · Term-Document Matrix · Boolean
+          AND/OR/NOT</span
         >
       </footer>
     </div>
 
-    <script>
-      let currentMethod = "tfidf";
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title" id="modal-title">Document Preview</span>
+          <button class="modal-close" onclick="closeModalBtn()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-section-label">Content Preview</div>
+          <div class="modal-text" id="modal-text"></div>
+          <div
+            class="modal-section-label"
+            id="weights-label"
+            style="display: none"
+          >
+            Top TF-IDF Terms
+          </div>
+          <div class="weights-grid" id="weights-grid"></div>
+        </div>
+      </div>
+    </div>
 
-      function setMethod(method, btn) {
-        currentMethod = method;
-        document.getElementById("method").value = method;
+    <script>
+      let currentMethod = "tfidf",
+        currentStemmer = "porter",
+        useLemma = false;
+      let statsStemmer = "porter",
+        mapStemmer = "porter";
+
+      function showPanel(name, btn) {
+        document
+          .querySelectorAll(".panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("panel-" + name).classList.add("active");
+        btn.classList.add("active");
+      }
+
+      document
+        .getElementById("logo-link")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          document.getElementById("query").value = "";
+          document.getElementById("relevant").value = "";
+          ["results-wrap", "metrics-wrap", "trace-wrap"].forEach(
+            (id) => (document.getElementById(id).innerHTML = "")
+          );
+          document.getElementById("status-bar").classList.remove("visible");
+          setMethod("tfidf", document.querySelector(".method-pill"));
+          setStemmer("porter", document.querySelector(".stemmer-pill"));
+          if (useLemma) {
+            useLemma = false;
+            document.getElementById("lemma-toggle").classList.remove("on");
+          }
+          showPanel("search", document.querySelector(".nav-tab"));
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          document.getElementById("query").focus();
+        });
+
+      function setMethod(m, btn) {
+        currentMethod = m;
         document
           .querySelectorAll(".method-pill")
           .forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("op-hint").style.display =
+          m !== "tfidf" ? "flex" : "none";
+      }
+
+      function setStemmer(s, btn) {
+        currentStemmer = s;
+        document
+          .querySelectorAll(".stemmer-pill")
+          .forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        if (useLemma) {
+          useLemma = false;
+          document.getElementById("lemma-toggle").classList.remove("on");
+        }
+      }
+
+      function toggleLemma() {
+        useLemma = !useLemma;
+        document
+          .getElementById("lemma-toggle")
+          .classList.toggle("on", useLemma);
+        if (useLemma)
+          document
+            .querySelectorAll(".stemmer-pill")
+            .forEach((p) => p.classList.remove("active"));
+        else
+          document.querySelectorAll(".stemmer-pill").forEach((p) => {
+            if (p.textContent.toLowerCase() === currentStemmer)
+              p.classList.add("active");
+          });
+      }
+
+      function setStatsStemmer(s, btn) {
+        statsStemmer = s;
+        document
+          .querySelectorAll('[id^="sp-"]')
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+      function setMapStemmer(s, btn) {
+        mapStemmer = s;
+        document
+          .querySelectorAll('[id^="mp-"]')
+          .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
       }
 
@@ -894,194 +1993,325 @@
         doSearch();
       }
 
-      function getCategoryClass(docName) {
-        const n = docName.toLowerCase();
-        if (n.includes("sci_med") || n.includes("sci-med"))
-          return "cat-sci-med";
-        if (n.includes("sci_space") || n.includes("sci-space"))
-          return "cat-sci-space";
-        if (n.includes("comp_")) return "cat-comp";
-        if (n.includes("rec_")) return "cat-rec";
-        if (n.includes("talk_")) return "cat-talk";
-        if (n.includes("alt_")) return "cat-alt";
-        if (n.includes("misc_")) return "cat-misc";
+      function setStatus(type, text) {
+        document.getElementById("status-dot").className = "status-dot " + type;
+        document.getElementById("status-text").textContent = text;
+        document.getElementById("status-bar").classList.add("visible");
+      }
+
+      function getCatClass(d) {
+        d = d.toLowerCase();
+        if (d.includes("medicine")) return "cat-medicine";
+        if (d.includes("space")) return "cat-space";
+        if (d.includes("computer_science")) return "cat-cs";
+        if (d.includes("sports")) return "cat-sports";
+        if (d.includes("politics")) return "cat-politics";
         return "cat-default";
       }
-
-      function getCategoryLabel(docName) {
-        const n = docName.toLowerCase();
-        if (n.includes("sci_med")) return "sci.med";
-        if (n.includes("sci_space")) return "sci.space";
-        if (n.includes("sci_elect")) return "sci.electronics";
-        if (n.includes("comp_graph")) return "comp.graphics";
-        if (n.includes("comp_")) return "comp";
-        if (n.includes("rec_sport_hock")) return "rec.hockey";
-        if (n.includes("rec_sport_base")) return "rec.baseball";
-        if (n.includes("rec_auto")) return "rec.autos";
-        if (n.includes("rec_")) return "rec";
-        if (n.includes("talk_polit")) return "talk.politics";
-        if (n.includes("talk_")) return "talk";
-        if (n.includes("alt_")) return "alt";
-        if (n.includes("misc_")) return "misc.forsale";
+      function getCatLabel(d) {
+        d = d.toLowerCase();
+        if (d.includes("medicine")) return "medicine";
+        if (d.includes("space")) return "space";
+        if (d.includes("computer_science")) return "cs";
+        if (d.includes("sports")) return "sports";
+        if (d.includes("politics")) return "politics";
         return "doc";
       }
-
-      function setStatus(type, text) {
-        const bar = document.getElementById("status-bar");
-        const dot = document.getElementById("status-dot");
-        const txt = document.getElementById("status-text");
-        dot.className = "status-dot " + type;
-        txt.textContent = text;
-        bar.classList.add("visible");
+      function domainBadge(domain) {
+        const map = {
+          medicine: "cat-medicine",
+          space: "cat-space",
+          computer_science: "cat-cs",
+          sports: "cat-sports",
+          politics: "cat-politics",
+        };
+        return `<span class="result-category ${
+          map[domain] || "cat-default"
+        }">${domain}</span>`;
       }
 
       async function doSearch() {
         const query = document.getElementById("query").value.trim();
-        const method = currentMethod;
-        const relevantRaw = document.getElementById("relevant").value.trim();
-        const relevant = relevantRaw
-          ? relevantRaw
+        const relRaw = document.getElementById("relevant").value.trim();
+        const relArr = relRaw
+          ? relRaw
               .split(",")
               .map((s) => s.trim())
               .filter(Boolean)
           : [];
-
         if (!query) {
           document.getElementById("query").focus();
           return;
         }
-
         const btn = document.getElementById("search-btn");
         btn.classList.add("loading");
-        btn.textContent = "Searching…";
-
+        btn.innerHTML = "Searching…";
         setStatus("loading", "Searching through corpus…");
-        document.getElementById("metrics-wrap").innerHTML = "";
-        document.getElementById("results-wrap").innerHTML = "";
-
+        ["results-wrap", "metrics-wrap", "trace-wrap"].forEach(
+          (id) => (document.getElementById(id).innerHTML = "")
+        );
         try {
           const res = await fetch("/search", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query, method, relevant }),
+            body: JSON.stringify({
+              query,
+              method: currentMethod,
+              stemmer: useLemma ? "porter" : currentStemmer,
+              use_lemma: useLemma,
+              relevant: relArr,
+            }),
           });
           const data = await res.json();
-
           btn.classList.remove("loading");
-          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
-
+          btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
           const count = data.count || 0;
-          const methodLabel = {
+          const ml = {
             tfidf: "TF-IDF + Cosine",
             td_matrix: "Term-Document Matrix",
             inverted_index: "Inverted Index",
-          }[method];
-
+          }[currentMethod];
+          if (data.trace) renderTrace(data.trace, query);
           if (count === 0) {
-            setStatus(
-              "empty",
-              `No results for "${query}" using ${methodLabel}`
-            );
-            document.getElementById("results-wrap").innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">⌀</div>
-            <div class="empty-title">No documents matched</div>
-            <div class="empty-sub">Try a different query or switch to TF-IDF for broader results</div>
-          </div>`;
+            setStatus("empty", `No results for "${query}" · ${ml}`);
+            document.getElementById(
+              "results-wrap"
+            ).innerHTML = `<div class="empty-state"><div class="empty-icon">⌀</div><div class="empty-title">No documents matched</div><div class="empty-sub">Try TF-IDF for broader results, or use OR between terms</div></div>`;
             return;
           }
-
           setStatus(
             "success",
-            `${count} result${count > 1 ? "s" : ""} · ${methodLabel}`
+            `${count} result${count > 1 ? "s" : ""} · ${ml}`
           );
-
-          // Metrics
           if (data.eval && Object.keys(data.eval).length > 0) {
             const e = data.eval;
-            document.getElementById("metrics-wrap").innerHTML = `
-          <div class="metrics-strip">
-            <div class="metric-tile"><div class="m-label">Precision</div><div class="m-value">${e.precision}</div></div>
-            <div class="metric-tile"><div class="m-label">Recall</div><div class="m-value">${e.recall}</div></div>
-            <div class="metric-tile"><div class="m-label">F1 Score</div><div class="m-value">${e.f1}</div></div>
-            <div class="metric-tile"><div class="m-label">Avg Precision</div><div class="m-value">${e.ap}</div></div>
-          </div>`;
+            document.getElementById(
+              "metrics-wrap"
+            ).innerHTML = `<div class="metrics-strip"><div class="metric-tile"><div class="m-label">Precision</div><div class="m-value">${e.precision}</div></div><div class="metric-tile"><div class="m-label">Recall</div><div class="m-value">${e.recall}</div></div><div class="metric-tile"><div class="m-label">F1 Score</div><div class="m-value">${e.f1}</div></div><div class="metric-tile"><div class="m-label">Avg Precision</div><div class="m-value">${e.ap}</div></div></div>`;
           }
-
-          // Results
-          const maxScore = data.results.length > 0 ? data.results[0].score : 1;
+          const maxS = data.results.length > 0 ? data.results[0].score : 1;
           let html = `<div class="results-header">${count} document${
             count > 1 ? "s" : ""
           } retrieved</div>`;
-
           data.results.forEach((r, i) => {
-            const barWidth =
-              maxScore > 0 ? Math.round((r.score / maxScore) * 100) : 0;
-            const catClass = getCategoryClass(r.doc);
-            const catLabel = getCategoryLabel(r.doc);
-            const isTop = i === 0;
-            const delay = Math.min(i * 40, 200);
-
-            html += `
-          <div class="result-card" style="animation-delay: ${delay}ms">
-            <div class="result-rank ${isTop ? "top" : ""}">${i + 1}</div>
-            <div class="result-body">
-              <div class="result-name">${r.doc}</div>
-              <div class="result-meta">
-                <span class="result-category ${catClass}">${catLabel}</span>
-                <span class="result-score">${r.score.toFixed(4)}</span>
-                <div class="score-bar-wrap">
-                  <div class="score-bar" style="width: ${barWidth}%"></div>
-                </div>
-              </div>
-            </div>
-            <a class="result-preview-link" href="/document/${
+            const bar = maxS > 0 ? Math.round((r.score / maxS) * 100) : 0;
+            html += `<div class="result-card" style="animation-delay:${Math.min(
+              i * 35,
+              180
+            )}ms"><div class="result-rank ${i === 0 ? "top" : ""}">${
+              i + 1
+            }</div><div class="result-body"><div class="result-name">${
               r.doc
-            }" target="_blank">Preview</a>
-          </div>`;
+            }</div><div class="result-meta"><span class="result-category ${getCatClass(
+              r.doc
+            )}">${getCatLabel(r.doc)}</span><span class="result-score">${
+              typeof r.score === "number" ? r.score.toFixed(4) : r.score
+            }</span><div class="score-bar-wrap"><div class="score-bar" style="width:${bar}%"></div></div></div></div><a class="result-preview-link" href="#" onclick="openPreview('${
+              r.doc
+            }');return false;">Preview</a></div>`;
           });
-
           document.getElementById("results-wrap").innerHTML = html;
         } catch (err) {
           btn.classList.remove("loading");
-          btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
-          setStatus("empty", "Connection error — is the server running?");
+          btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="white" stroke-width="1.5"/><line x1="11" y1="11" x2="14.5" y2="14.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Search`;
+          setStatus("empty", "Connection error — please try again");
         }
+      }
+
+      function renderTrace(trace, query) {
+        const steps = [
+          { label: "Tokens", tokens: trace.tokens, cls: "" },
+          { label: "No Stops", tokens: trace.filtered, cls: "" },
+          { label: "Processed", tokens: trace.processed, cls: "final" },
+        ];
+        let rows = steps
+          .map(
+            (s) =>
+              `<div class="trace-row"><span class="trace-step">${
+                s.label
+              }</span><div class="trace-tokens">${s.tokens
+                .map((t) => `<span class="trace-token ${s.cls}">${t}</span>`)
+                .join("")}</div></div>`
+          )
+          .join("");
+        fetch("/preprocess", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query,
+            stemmer: currentStemmer,
+            use_lemma: useLemma,
+          }),
+        })
+          .then((r) => r.json())
+          .then((d) => {
+            const cmp = d.comparison;
+            const cols = [
+              { l: "Porter", t: cmp.porter || [] },
+              { l: "Snowball", t: cmp.snowball || [] },
+              { l: "Lancaster", t: cmp.lancaster || [] },
+              { l: "Lemmatizer", t: cmp.lemmatizer || [] },
+            ];
+            const cmpHtml = cols
+              .map(
+                (c) =>
+                  `<div><div class="compare-col-label">${c.l}</div>${c.t
+                    .map((t) => `<span class="compare-token">${t}</span>`)
+                    .join(" ")}</div>`
+              )
+              .join("");
+            document.getElementById(
+              "trace-wrap"
+            ).innerHTML = `<div class="trace-card"><div class="trace-title">Query Preprocessing Pipeline</div>${rows}<div class="compare-title">Stemmer / Lemmatizer Comparison</div><div class="compare-grid">${cmpHtml}</div></div>`;
+          })
+          .catch(() => {
+            document.getElementById(
+              "trace-wrap"
+            ).innerHTML = `<div class="trace-card"><div class="trace-title">Query Preprocessing Pipeline</div>${rows}</div>`;
+          });
+      }
+
+      async function openPreview(docName) {
+        document.getElementById("modal-title").textContent = docName;
+        document.getElementById("modal-text").textContent = "Loading…";
+        document.getElementById("weights-grid").innerHTML = "";
+        document.getElementById("weights-label").style.display = "none";
+        document.getElementById("modal-overlay").classList.add("open");
+        const res = await fetch(`/document/${encodeURIComponent(docName)}`);
+        const data = await res.json();
+        document.getElementById("modal-text").textContent =
+          data.content + (data.content.length >= 1200 ? "…" : "");
+        if (data.weights && data.weights.length > 0) {
+          document.getElementById("weights-label").style.display = "block";
+          const maxW = data.weights[0].score;
+          document.getElementById("weights-grid").innerHTML = data.weights
+            .map(
+              (w) =>
+                `<div class="weight-row"><span class="weight-term">${
+                  w.term
+                }</span><div class="weight-bar-wrap"><div class="weight-bar" style="width:${Math.round(
+                  (w.score / maxW) * 100
+                )}%"></div></div><span class="weight-score">${
+                  w.score
+                }</span></div>`
+            )
+            .join("");
+        }
+      }
+
+      function closeModal(e) {
+        if (e.target === e.currentTarget) closeModalBtn();
+      }
+      function closeModalBtn() {
+        document.getElementById("modal-overlay").classList.remove("open");
+      }
+
+      async function loadStats() {
+        document.getElementById("stats-content").innerHTML =
+          '<div style="text-align:center;padding:40px;color:var(--gray-400)">Loading statistics…</div>';
+        const res = await fetch(`/stats?stemmer=${statsStemmer}`);
+        const data = await res.json();
+        const maxIdf = Math.max(...data.most_specific.map((t) => t.idf));
+        const maxLow = Math.max(...data.most_common.map((t) => t.idf));
+        const maxAvg = Math.max(...data.highest_tfidf.map((t) => t.score));
+        document.getElementById("stats-content").innerHTML = `
+      <div class="stats-grid">
+        <div class="stats-big-card"><div class="stats-big-num">${
+          data.n_docs
+        }</div><div class="stats-big-label">Documents in corpus</div></div>
+        <div class="stats-big-card"><div class="stats-big-num">${data.n_terms.toLocaleString()}</div><div class="stats-big-label">Unique terms in vocabulary</div></div>
+      </div>
+      <div class="stats-section">
+        <div class="stats-section-title">Most Specific Terms <span class="stats-badge badge-blue">Highest IDF</span></div>
+        ${data.most_specific
+          .map(
+            (t) =>
+              `<div class="term-row"><span class="term-word">${
+                t.term
+              }</span><div class="term-bar-wrap"><div class="term-bar bar-blue" style="width:${Math.round(
+                (t.idf / maxIdf) * 100
+              )}%"></div></div><span class="term-val">${t.idf}</span></div>`
+          )
+          .join("")}
+      </div>
+      <div class="stats-section">
+        <div class="stats-section-title">Most Common Terms <span class="stats-badge badge-teal">Lowest IDF</span></div>
+        ${data.most_common
+          .map(
+            (t) =>
+              `<div class="term-row"><span class="term-word">${
+                t.term
+              }</span><div class="term-bar-wrap"><div class="term-bar bar-teal" style="width:${Math.round(
+                (t.idf / maxLow) * 100
+              )}%"></div></div><span class="term-val">${t.idf}</span></div>`
+          )
+          .join("")}
+      </div>
+      <div class="stats-section">
+        <div class="stats-section-title">Highest Average TF-IDF <span class="stats-badge badge-amber">Most Discriminative</span></div>
+        ${data.highest_tfidf
+          .map(
+            (t) =>
+              `<div class="term-row"><span class="term-word">${
+                t.term
+              }</span><div class="term-bar-wrap"><div class="term-bar bar-amber" style="width:${Math.round(
+                (t.score / maxAvg) * 100
+              )}%"></div></div><span class="term-val">${t.score}</span></div>`
+          )
+          .join("")}
+      </div>`;
+      }
+
+      async function runMAP() {
+        document.getElementById("map-content").innerHTML =
+          '<div style="text-align:center;padding:40px;color:var(--gray-400)">Running evaluation…</div>';
+        const res = await fetch("/evaluate_map", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stemmer: mapStemmer, use_lemma: false }),
+        });
+        const data = await res.json();
+        const cards = data.queries
+          .map(
+            (q) => `
+      <div class="map-query-card">
+        <div class="map-query-header">${domainBadge(
+          q.domain
+        )}<span class="map-query-text">"${
+              q.query
+            }"</span><span style="font-size:12px;color:var(--gray-400);margin-left:auto">${
+              q.relevant_count
+            } relevant</span></div>
+        <div class="map-metrics-row">
+          <div class="map-metric"><div class="map-metric-val">${
+            q.precision
+          }</div><div class="map-metric-lbl">Precision</div></div>
+          <div class="map-metric"><div class="map-metric-val">${
+            q.recall
+          }</div><div class="map-metric-lbl">Recall</div></div>
+          <div class="map-metric"><div class="map-metric-val">${
+            q.f1
+          }</div><div class="map-metric-lbl">F1</div></div>
+          <div class="map-metric"><div class="map-metric-val">${
+            q.ap
+          }</div><div class="map-metric-lbl">AP</div></div>
+        </div>
+      </div>`
+          )
+          .join("");
+        document.getElementById("map-content").innerHTML = `
+      <div class="map-hero"><div class="map-score">${data.map}</div><div class="map-label">Mean Average Precision — ${mapStemmer} stemmer</div></div>
+      <div style="font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;padding:0 4px">Per-Query Results</div>
+      ${cards}`;
       }
 
       document.getElementById("query").addEventListener("keydown", (e) => {
         if (e.key === "Enter") doSearch();
       });
-      document
-        .getElementById("logo-link")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-
-          // Clear all inputs
-          document.getElementById("query").value = "";
-          document.getElementById("relevant").value = "";
-
-          // Clear results and metrics
-          document.getElementById("results-wrap").innerHTML = "";
-          document.getElementById("metrics-wrap").innerHTML = "";
-
-          // Hide status bar
-          const bar = document.getElementById("status-bar");
-          bar.classList.remove("visible");
-
-          // Reset method pills to TF-IDF
-          setMethod("tfidf", document.querySelector(".method-pill"));
-          document
-            .querySelectorAll(".method-pill")
-            .forEach((p) => p.classList.remove("active"));
-          document.querySelector(".method-pill").classList.add("active");
-
-          // Scroll to top smoothly
-          window.scrollTo({ top: 0, behavior: "smooth" });
-
-          // Focus the search input
-          document.getElementById("query").focus();
-        });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModalBtn();
+      });
     </script>
   </body>
 </html>
+
