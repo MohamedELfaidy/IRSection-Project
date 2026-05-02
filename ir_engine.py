@@ -366,4 +366,3 @@ def build_test_relevant(doc_names):
             'relevant': relevant,
         })
     return suite
-
