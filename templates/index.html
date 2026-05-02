@@ -878,6 +878,40 @@
         line-height: 1.7;
         margin-bottom: 20px;
       }
+      .doc-list-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s;
+        border-bottom: 1px solid var(--gray-50);
+      }
+      .doc-list-item:last-child {
+        border-bottom: none;
+      }
+      .doc-list-item:hover {
+        background: var(--blue-50);
+      }
+      .doc-list-num {
+        font-family: "DM Mono", monospace;
+        font-size: 11px;
+        color: var(--gray-400);
+        min-width: 28px;
+      }
+      .doc-list-name {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
+        color: var(--gray-800);
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .doc-list-item:hover .doc-list-name {
+        color: var(--blue-600);
+      }
       .weights-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1396,7 +1430,15 @@
             Information Retrieval System · Minia University
           </div>
         </div>
-        <div class="corpus-badge" id="corpus-badge">{{ doc_count }} docs</div>
+        <div
+          class="corpus-badge"
+          id="corpus-badge"
+          onclick="showDocsModal()"
+          style="cursor: pointer"
+          title="Click to view all documents"
+        >
+          {{ doc_count }} docs
+        </div>
       </header>
 
       <!-- NAV TABS -->
@@ -2322,6 +2364,64 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModalBtn();
       });
+
+      async function showDocsModal() {
+        document.getElementById("docs-modal-overlay").classList.add("open");
+        document.getElementById("docs-modal-count").textContent = "Loading…";
+        document.getElementById("docs-modal-list").innerHTML = "";
+
+        const res = await fetch("/documents_list");
+        const data = await res.json();
+
+        document.getElementById(
+          "docs-modal-title"
+        ).textContent = `Indexed Documents — ${data.count} total`;
+        document.getElementById(
+          "docs-modal-count"
+        ).textContent = `Click any document to preview its content`;
+
+        document.getElementById("docs-modal-list").innerHTML = data.documents
+          .map(
+            (d, i) => `
+      <div class="doc-list-item" onclick="closeDocsModal();openPreview('${d}')">
+        <span class="doc-list-num">${i + 1}</span>
+        <span class="result-category ${getCatClass(d)}">${getCatLabel(d)}</span>
+        <span class="doc-list-name">${d}</span>
+      </div>`
+          )
+          .join("");
+      }
+
+      function closeDocsModal(e) {
+        if (!e || e.target === e.currentTarget) {
+          document
+            .getElementById("docs-modal-overlay")
+            .classList.remove("open");
+        }
+      }
     </script>
+    <!-- DOCUMENTS LIST MODAL -->
+    <div
+      class="modal-overlay"
+      id="docs-modal-overlay"
+      onclick="closeDocsModal(event)"
+    >
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title" id="docs-modal-title"
+            >Indexed Documents</span
+          >
+          <button class="modal-close" onclick="closeDocsModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div
+            class="modal-section-label"
+            style="margin-bottom: 14px"
+            id="docs-modal-count"
+          ></div>
+          <div id="docs-modal-list"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

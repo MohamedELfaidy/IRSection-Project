@@ -32,3 +32,4 @@ Thumbs.db
 
 # Documents folder (large dataset — optional, keep if small)
 # documents/
+deploy.sh

@@ -154,6 +154,13 @@ def get_document(doc_name):
     })
 
 
+@app.route('/documents_list')
+def documents_list():
+    return jsonify({
+        'documents': list(raw_docs.keys()),
+        'count': len(raw_docs)
+    })
+
 # ── /stats  — vocabulary & IDF statistics ────────────────────
 @app.route('/stats')
 def stats():
